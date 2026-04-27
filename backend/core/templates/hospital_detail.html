@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html>
+<head>
+    
+    <title>Hospital Detail</title>
+
+    <style>
+        body {
+            font-family: Arial;
+            margin: 20px;
+        }
+
+        .review-box {
+            border: 1px solid #ccc;
+            padding: 10px;
+            margin-bottom: 10px;
+            border-radius: 8px;
+        }
+
+        form {
+            background: #f4f4f4;
+            padding: 15px;
+            border-radius: 10px;
+            margin-bottom: 20px;
+        }
+
+        select, textarea {
+            width: 100%;
+            margin-bottom: 10px;
+        }
+
+        button {
+            padding: 8px 15px;
+            background: #007bff;
+            color: white;
+            border: none;
+        }
+    </style>
+</head>
+
+<body>
+<h1>HELLO SEHAT SETU</h1>
+<h2>{{ hospital.name }}</h2>
+
+<p>⭐ Average Rating: {{ hospital.rating_avg }}</p>
+
+<hr>
+
+<h3>Rate this Hospital</h3>
+
+<form method="POST" action="/add_review/">
+    {% csrf_token %}
+
+    <input type="hidden" name="hospital_id" value="{{ hospital.id }}">
+
+    <label>Overall Experience:</label>
+    <select name="rating_overall">
+        <option value="5">⭐⭐⭐⭐⭐</option>
+        <option value="4">⭐⭐⭐⭐</option>
+        <option value="3">⭐⭐⭐</option>
+        <option value="2">⭐⭐</option>
+        <option value="1">⭐</option>
+    </select>
+
+    <label>Cleanliness:</label>
+    <select name="cleanliness">
+        <option value="5">⭐⭐⭐⭐⭐</option>
+        <option value="4">⭐⭐⭐⭐</option>
+        <option value="3">⭐⭐⭐</option>
+        <option value="2">⭐⭐</option>
+        <option value="1">⭐</option>
+    </select>
+
+    <label>Waiting Time:</label>
+    <select name="waiting_time">
+        <option value="5">⭐⭐⭐⭐⭐</option>
+        <option value="4">⭐⭐⭐⭐</option>
+        <option value="3">⭐⭐⭐</option>
+        <option value="2">⭐⭐</option>
+        <option value="1">⭐</option>
+    </select>
+
+    <label>Cost Transparency:</label>
+    <select name="cost_transparency">
+        <option value="5">⭐⭐⭐⭐⭐</option>
+        <option value="4">⭐⭐⭐⭐</option>
+        <option value="3">⭐⭐⭐</option>
+        <option value="2">⭐⭐</option>
+        <option value="1">⭐</option>
+    </select>
+
+    <label>Facilities:</label>
+    <select name="facilities">
+        <option value="5">⭐⭐⭐⭐⭐</option>
+        <option value="4">⭐⭐⭐⭐</option>
+        <option value="3">⭐⭐⭐</option>
+        <option value="2">⭐⭐</option>
+        <option value="1">⭐</option>
+    </select>
+
+    <label>Review:</label>
+    <textarea name="comment" required></textarea>
+
+    <button type="submit">Submit Review</button>
+</form>
+
+<hr>
+
+<h3>Reviews</h3>
+
+{% for review in reviews %}
+<div class="review-box">
+    <p>⭐ Overall: {{ review.rating_overall }}</p>
+    <p>🧼 Cleanliness: {{ review.cleanliness }}</p>
+    <p>⏱ Waiting Time: {{ review.waiting_time }}</p>
+    <p>💰 Cost: {{ review.cost_transparency }}</p>
+    <p>🏥 Facilities: {{ review.facilities }}</p>
+    <p>💬 {{ review.comment }}</p>
+</div>
+{% endfor %}
+
+</body>
+</html>
