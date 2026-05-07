@@ -1,0 +1,58 @@
+from django.db import models
+
+class Hospital(models.Model):
+    HOSPITAL_TYPE_CHOICES = [
+        ('private', 'Private'),
+        ('government', 'Government'),
+    ]
+
+    name = models.CharField(max_length=255)
+    location = models.CharField(max_length=255)
+    type = models.CharField(max_length=20, choices=HOSPITAL_TYPE_CHOICES, default='private')
+    beds = models.IntegerField(default=0)
+    specialties = models.TextField(blank=True)  # Comma-separated specialties
+    facilities = models.TextField(blank=True)  # Comma-separated facilities
+    price_range = models.CharField(max_length=50, blank=True)  # e.g., "₹500-₹2000", "₹1000-₹5000"
+    rating = models.DecimalField(max_digits=3, decimal_places=1, default=0.0)
+    contact_number = models.CharField(max_length=20, blank=True)
+    address = models.TextField(blank=True)
+    photo = models.ImageField(upload_to='hospitals/', blank=True, null=True)
+
+    def __str__(self):
+        return self.name
+
+    def get_specialties_list(self):
+        return [s.strip() for s in self.specialties.split(',') if s.strip()]
+
+    def get_facilities_list(self):
+        return [f.strip() for f in self.facilities.split(',') if f.strip()]
+
+class Doctor(models.Model):
+    name = models.CharField(max_length=255)
+    photo = models.ImageField(upload_to='doctors/', blank=True, null=True)
+    location = models.CharField(max_length=255)
+    experience_years = models.IntegerField(default=0)
+    specialty = models.CharField(max_length=255)
+    hospital = models.ForeignKey(Hospital, on_delete=models.CASCADE, related_name='doctors')
+    contact_number = models.CharField(max_length=20, blank=True)
+    email = models.EmailField(blank=True)
+    qualifications = models.TextField(blank=True)  # Degrees, certifications
+    rating = models.DecimalField(max_digits=3, decimal_places=1, default=0.0)
+    available_days = models.CharField(max_length=255, blank=True)  # e.g., "Mon-Fri"
+    consultation_fee = models.DecimalField(max_digits=10, decimal_places=2, default=0.00)
+
+    def __str__(self):
+        return f"Dr. {self.name} - {self.specialty}"
+
+class Review(models.Model):
+    hospital = models.ForeignKey(Hospital, on_delete=models.CASCADE)
+    rating_overall = models.IntegerField()
+    cleanliness = models.IntegerField()
+    waiting_time = models.IntegerField()
+    cost_transparency = models.IntegerField()
+    facilities = models.IntegerField()
+    comment = models.TextField()
+
+    def __str__(self):
+        return f"Review {self.rating_overall}"
+
